@@ -1,0 +1,21 @@
+package com.santander.controller;
+
+import java.net.URISyntaxException;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class ErrorController {
+
+	@RequestMapping("/failed")
+	public String error(Model model, HttpServletRequest request) throws URISyntaxException {
+
+		return "error";
+
+	}
+
+}
