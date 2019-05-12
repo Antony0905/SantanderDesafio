@@ -21,7 +21,7 @@ public class HistoricoGastosService {
 
 			RestTemplate template = new RestTemplate();
 			HttpHeaders headers = new HttpHeaders();
-			String url = "http://localhost:8801/listarGastos";
+			String url = "http://172.72.0.101:8801/listarGastos";
 			headers.add("Authorization", token);
 			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
@@ -47,7 +47,7 @@ public class HistoricoGastosService {
 
 			RestTemplate template = new RestTemplate();
 			HttpHeaders headers = new HttpHeaders();
-			String url = "http://localhost:8801/listarGastosByDate?date=" + date;
+			String url = "http://172.72.0.101:8801/listarGastosByDate?date=" + date;
 			headers.add("Authorization", token);
 			HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
@@ -72,7 +72,7 @@ public class HistoricoGastosService {
 		try {
 
 			RestTemplate restTemplate = new RestTemplate();
-			String url = "http://localhost:8800/atualizarGasto";
+			String url = "http://172.72.0.100:8800/atualizarGasto";
 
 			HttpEntity<HistoricoGastos> entity = new HttpEntity<HistoricoGastos>(historicoGastos);
 			restTemplate.exchange(url, HttpMethod.POST, entity, String.class);

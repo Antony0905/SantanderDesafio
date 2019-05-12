@@ -1,0 +1,92 @@
+version: '3'
+volumes:
+    dados:
+networks:
+    docker_santander:
+        ipam:
+          driver: default
+          config:
+            - subnet: 172.72.0.0/16
+services:
+    postgres:
+        image: postgres:11
+        ports:
+            - 5432:5432
+        expose:
+            - "5432"
+        volumes:
+            - dados:/var/lib/postgresql/data
+            - ./app/scripts:/scripts
+            - ./app/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+        environment:
+            PGDATA: /tmp
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.2
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "postgres"
+            PGADMIN_DEFAULT_PASSWORD: "postgres"
+        ports:
+            - 16543:80
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.3
+    mongodb:
+        image: mongo:3.4
+        ports:
+            - 27017:27017
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.4
+    activemq:
+        image: webcenter/activemq:5.14.3
+        ports:
+            - 8161:8161
+            - 61616:61616
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.5
+    santandercommand:
+        build: ./app/SantanderCommand
+        working_dir: /app/SantanderCommand
+        volumes:
+          - ./app/SantanderCommand:/app/SantanderCommand
+          - ~/.m2:/root/.m2
+        ports:
+            - 8800:8800
+        expose:
+            - "8800"
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.100
+        command: mvn clean spring-boot:run
+    santanderquery:
+        build: ./app/SantanderQuery
+        working_dir: /app/SantanderQuery
+        volumes:
+          - ./app/SantanderQuery:/app/SantanderQuery
+          - ~/.m2:/root/.m2
+        ports:
+            - 8801:8801
+        expose:
+            - "8801"
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.101
+        command: mvn clean spring-boot:run
+    santanderweb:
+        build: ./app/SantanderWeb
+        working_dir: /app/SantanderWeb
+        volumes:
+          - ./app/SantanderWeb:/app/SantanderWeb
+          - ~/.m2:/root/.m2
+        ports:
+            - 8802:8802
+        expose:
+            - "8802"
+        networks:
+            docker_santander:
+                ipv4_address: 172.72.0.102
+        command: mvn clean spring-boot:run
